@@ -20,10 +20,14 @@ public class RegistrationController {
 
     private UserRepository userRepo;
     private PasswordEncoder passwordEncoder;
+    private RegistrationValidator regValidator;
 
-    public RegistrationController(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+    public RegistrationController(UserRepository userRepo,
+                                  PasswordEncoder passwordEncoder,
+                                  RegistrationValidator regValidator) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.regValidator=regValidator;
     }
 
 
@@ -34,9 +38,10 @@ public class RegistrationController {
 
 
     @PostMapping
-    public String registerNewUser(RegistrationForm registrationForm, BindingResult bindingResult){
+    public String registerNewUser(@Valid RegistrationForm registrationForm, BindingResult bindingResult){
+        regValidator.validate(registrationForm, bindingResult);
         if(bindingResult.hasErrors())
-            return "register_page";
+            return "authorization/registration";
 
         log.info("rejestracja: "+ registrationForm);
         userRepo.save(registrationForm.toUser(passwordEncoder));
