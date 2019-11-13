@@ -25,10 +25,10 @@ import java.util.Optional;
 @RequestMapping("/limits")
 public class LimitController {
 
-    private LimitRepository limitRepo;
+   private LimitService limitService;
 
-    public LimitController(LimitRepository limitRepo) {
-        this.limitRepo = limitRepo;
+    public LimitController(LimitService limitService) {
+        this.limitService = limitService;
     }
 
     @GetMapping("/set")
@@ -36,16 +36,10 @@ public class LimitController {
         LimitForm limitForm = new LimitForm();
         model.addAttribute("limitForm", limitForm);
 
-        System.out.println("________ZDAROWA________________________________________________");
-        Optional<Limit> yearLimitData = limitRepo.getByUserIdAndMonthAndYear(user.getId(),(short)0,
-                (short) Calendar.getInstance().get(Calendar.YEAR));
-        double yearLimit = yearLimitData.isPresent() ? yearLimitData.get().getAmount() : 0;
+        double yearLimit = limitService.getYearLimit(user.getId());
         model.addAttribute("yearLimit",yearLimit);
 
-        Optional<Limit> monthLimitData = limitRepo.getByUserIdAndMonthAndYear(user.getId(),
-                (short)(Calendar.getInstance().get(Calendar.MONTH)+1),
-                (short) Calendar.getInstance().get(Calendar.YEAR) );
-        double monthLimit = monthLimitData.isPresent() ? monthLimitData.get().getAmount() : 0;
+        double monthLimit = limitService.getMonthLimit(user.getId());
         model.addAttribute("monthLimit", monthLimit);
 
         model.addAttribute("currencies", Money.values());
@@ -64,16 +58,7 @@ public class LimitController {
         }
         else{
             Limit limit = limitForm.toLimit(user);
-
-            Optional<Limit> limitRow = limitRepo.getByUserIdAndMonthAndYear(user.getId(),limit.getMonth(),limit.getYear());
-             if(limitRow.isPresent()) {
-                log.info("Limit already present: " + limitRow.get());
-                // if already exist, update just amount
-                limitRow.get().setAmount(limit.getAmount());
-                limitRepo.save(limitRow.get());
-            }
-             else limitRepo.save(limit);
-            log.info("Limit jest wrzucony do bazy: "+ limit);
+            limitService.saveOrUpdate(limit,user.getId());
         }
         return "redirect:/limits/set";
     }
