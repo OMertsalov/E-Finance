@@ -1,0 +1,11 @@
+function alternateColor(idT, idD) {
+    var table = document.getElementById(idT);
+    var row = table.getElementById(idD);
+    if(row.text<20)
+    {
+        row.style.color="red";
+        row.style.bgcolor="red";
+    }
+
+
+}

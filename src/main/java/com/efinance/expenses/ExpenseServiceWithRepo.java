@@ -17,7 +17,7 @@ public class ExpenseServiceWithRepo implements ExpenseService {
     private ExpensesRepository expensesRepo;
 
     @Override
-    public double getMonthExpenses(Long userId) {
+    public double getSumOfMonthExpenses(Long userId) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
@@ -32,7 +32,19 @@ public class ExpenseServiceWithRepo implements ExpenseService {
     }
 
     @Override
-    public double getYearExpenses(Long userId) {
+    public List<Expense> getAllMonthExpenses(Long userId) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date from  = new Date(calendar.getTimeInMillis());
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date to = new Date(calendar.getTimeInMillis());
+        return expensesRepo.findByUserIdAndTimeBetween(userId, from, to);
+    }
+
+    @Override
+    public double getSumOfYearExpenses(Long userId) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, 0);
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
@@ -48,7 +60,33 @@ public class ExpenseServiceWithRepo implements ExpenseService {
     }
 
     @Override
-    public double getDayExpenses(Long userId) {
+    public List<Expense> getAllExpensesByYear(Long userId, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date from = new Date(calendar.getTimeInMillis());
+        calendar.set(Calendar.MONTH, calendar.getActualMaximum(Calendar.MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date to = new Date(calendar.getTimeInMillis());
+        return expensesRepo.findByUserIdAndTimeBetween(userId, from, to);
+    }
+
+    @Override
+    public List<Expense> getAllExpensesByMonthAndYear(Long userId, int month, int year) {
+        month -= 1;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        Date from = new Date(calendar.getTimeInMillis());
+        calendar.set(year, month, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date to = new Date(calendar.getTimeInMillis());
+        return expensesRepo.findByUserIdAndTimeBetween(userId, from, to);
+    }
+
+    @Override
+    public double getSumOfDayExpenses(Long userId) {
         Calendar calendar = Calendar.getInstance();
         Date date = new Date(calendar.getTimeInMillis());
         return expensesRepo.findByUserIdAndTime(userId, date)
@@ -56,7 +94,7 @@ public class ExpenseServiceWithRepo implements ExpenseService {
     }
 
     @Override
-    public List<Expense> showPageableAllOrderByTimeDesc(Long userId,int page,int size){
+    public List<Expense> showPageableAllOrderByTimeDesc(Long userId, int page, int size){
         Pageable pageable = PageRequest.of(page,size, Sort.by("time").descending());
         return expensesRepo.findAllByUserId(userId,pageable);
     }

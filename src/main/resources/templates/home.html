@@ -41,7 +41,7 @@
                 Error</span>
         <input type="text" name="howmuch"  th:field="*{amount}" placeholder="Type quote">
 
-        <input type="submit" id="submitButton" value="Apply"  />
+        <input type="submit" id="submitButton"  value="Apply" onclick="showSuccessMes()"/>
 
 
     </form>
@@ -108,7 +108,7 @@
 <form th:action="@{/limits/set}" method="get">
     <input type="submit" value="Set limit"/>
 </form>
-<form th:action="@{/stats/spendingByCategoryCurrMon}" method="get">
+<form th:action="@{/stats/byCategory/currentMonth}" method="get">
     <input type="submit" value="See month stats"/>
 </form>
 

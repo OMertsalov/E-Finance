@@ -4,23 +4,17 @@ import com.efinance.account.user.User;
 import com.efinance.expenses.Expense;
 import com.efinance.expenses.ExpenseForm;
 import com.efinance.expenses.ExpenseService;
-import com.efinance.expenses.ExpensesRepository;
 import com.efinance.expenses.category.CategoriesRepository;
 import com.efinance.expenses.category.Category;
-import com.efinance.limits.Limit;
-import com.efinance.limits.LimitRepository;
 import com.efinance.limits.LimitService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.sql.Date;
+
 import java.util.*;
 
 @Controller
@@ -58,20 +52,20 @@ public class HomeController {
         model.addAttribute("categories", categories);
         model.addAttribute("currencies", ExpenseForm.Money.values());
 
-        double monthExpenses = expenseService.getMonthExpenses(user.getId());
+        double monthExpenses = expenseService.getSumOfMonthExpenses(user.getId());
         double monthLimit = limitService.getMonthLimit(user.getId());
         double monthRemains = monthLimit-monthExpenses;
         if(monthRemains<0)
             monthRemains=0;
 
 
-        double yearExpenses  = expenseService.getYearExpenses(user.getId());
+        double yearExpenses  = expenseService.getSumOfYearExpenses(user.getId());
         double yearLimit = limitService.getYearLimit(user.getId());
         double yearRemains = yearLimit - yearExpenses;
         if(yearRemains <0)
             yearRemains=0;
 
-        double dayExpenses = expenseService.getDayExpenses(user.getId());
+        double dayExpenses = expenseService.getSumOfDayExpenses(user.getId());
 
         double averageMonthExpenses=monthExpenses/ Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+1;
 

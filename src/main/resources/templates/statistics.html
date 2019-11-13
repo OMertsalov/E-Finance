@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8; text/javascript">
+    <title></title>
+    <link  th:href="@{/statStyle.css}" rel="stylesheet" type="text/css" media="all">
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        window.onload = function()  {
+            var labls = 1;
+            var vals = 1;
+            var dataForChart = [];
+            for (var j = 0; j < labls.length; j++) {
+                dataForChart.push({
+                    label: labls[j],
+                    y: vals[j]
+                })
+            }
+            var chart = new CanvasJS.Chart ("chartContainer", {
+                title: {
+                    text: "Monthly Expenses"
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 240,
+                    showInLegend: "true",
+                    legendText: "{label}",
+                    yValueFormatString: "##0.00\"PLN \"",
+                    indexLabel: "{label} {y}",
+                    dataPoints: dataForChart
+                }]
+            });
+            chart.render();
+        }
+        /*]]>*/
+    </script>
+    <script>
+        function changeStateOfSelect() {
+            var checkbox = document.getElementById("check");
+            var mySelect = document.getElementById("select");
+            if(checkbox.checked) {
+                //if checked means gonna set to year limit, month should return 0
+                mySelect.disabled = true;
+            }
+            else {
+                mySelect.disabled = false;
+                mySelect.required = true;
+                mySelect.defaultValue=1
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+<form th:action="@{/home}">
+    <input type="submit" value="Home"/>
+</form>
+<div class="form-style-5" >
+    <form th:action="@{/stats/byCategory/selectedTime}" th:object="${statForm}" >
+        <input th:type="checkbox" id="check" th:field="*{isYear}" onclick="changeStateOfSelect()"> Year limit
+        <label>Month</label>
+        <select th:field="*{month}" id="select" onchange="changeStateOfSelect()" >
+            <option th:each="i : ${#numbers.sequence(1,12)}" th:value="${i}" th:text="${i}">
+            </option>
+        </select>
+        <label>Year</label>
+        <select th:field="*{year}">
+            <option th:each="i : ${#numbers.sequence(2019,3000)}" th:value="${i}" th:text="${i}">
+            </option>
+        </select>
+        <input type="submit" value="See month stats"/>
+    </form>
+</div>
+<div id="chartContainer" class="piestyle"></div>
+
+
+
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<!--<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>-->
+
+</body>
