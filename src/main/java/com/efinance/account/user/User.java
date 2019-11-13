@@ -11,7 +11,7 @@ import java.util.Collection;
 
 
 
-
+@Getter
 @Entity
 @Table(name="user")
 @ToString
@@ -19,42 +19,57 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    @Getter
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
+
     @Setter
     @Column(name = "first_name", nullable = true, length = 30)
     private String firstName;
-    @Getter
+
     @Setter
     @Column(name = "last_name", nullable = true, length = 30)
     private String lastName;
-    @Getter
+
     @Setter
     @Column(name = "login", nullable = false, length = 30)
     private String login;
-    @Getter
+
     @Setter
     @Column(name = "password", nullable = false, length = 30)
     private String password;
-    @Getter
+
+    //Email
     @Setter
-    @Column(name = "email", nullable = true, length = 40)
+    @Column(name = "email", nullable = false, length = 40)
     private String email;
+
+    @Setter
+    @Column(name = "month_report")
+    private boolean monthReport;
+
+    @Setter
+    @Column(name = "weekly_report")
+    private boolean weeklyReport;
+
+    @Setter
+    @Column(name = "reset_token")
+    private String resetToken;
 
 
     public User() {
     }
 
-    public User(String firstName, String lastName, String login, String password, String email) {
+    public User(String firstName, String lastName, String login, String password, String email, boolean monthReport, boolean weeklyReport) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
         this.password = password;
         this.email = email;
+        this.monthReport = monthReport;
+        this.weeklyReport = weeklyReport;
     }
 
     @Override

@@ -89,8 +89,22 @@ public class ExpenseServiceWithRepo implements ExpenseService {
     public double getSumOfDayExpenses(Long userId) {
         Calendar calendar = Calendar.getInstance();
         Date date = new Date(calendar.getTimeInMillis());
-        return expensesRepo.findByUserIdAndTime(userId, date)
+        double sum=0;
+        sum = expensesRepo.findByUserIdAndTime(userId, date)
                 .stream().mapToDouble(Expense::getAmount).sum();
+        return sum;
+    }
+
+    @Override
+    public double getSumOfWeekExpenses(Long userId)  {
+        Calendar c = Calendar.getInstance();
+        Date to = new Date(c.getTimeInMillis());
+        c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH)-6);
+        Date from = new Date(c.getTimeInMillis());
+        double sum=0;
+        sum = expensesRepo.findByUserIdAndTimeBetween(userId, from, to).stream().
+                mapToDouble(expenses -> expenses.getAmount()).sum();
+        return sum;
     }
 
     @Override

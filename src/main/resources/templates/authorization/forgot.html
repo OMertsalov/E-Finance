@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Forgot password</title>
+    <link th:href="@{/loginStyle.css}" rel="stylesheet" type="text/css" media="all">
+</head>
+
+<body>
+<div th:if="${error}">
+    Unable to login. Check your username and password.
+</div>
+<div class="login-page">
+    <div class="form">
+        <form  th:action="@{/forgot}" method="post" >
+            <label th:if="${Tmessage}" th:text="${Tmessage}" th:class="messageInfo" >
+            </label>
+            <input type="text" name="email" id="email" placeholder="email"/>
+            <input type="submit" value="send token to email" />
+            <p class="message">To log in here?  <a th:href="@{authorization/login}">here</a> Create an account</a></p>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -52,3 +52,9 @@ CREATE TABLE IF NOT EXISTS `expenses` (
 );
 
 ALTER TABLE `expenses` CHANGE `spendingtime` `time` date;
+
+
+ALTER TABLE `user`
+ADD COLUMN `month_report` tinyint(1),
+ADD COLUMN `weekly_report` tinyint(1),
+ADD COLUMN `reset_token` varchar(500);
