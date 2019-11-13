@@ -51,3 +51,4 @@ CREATE TABLE IF NOT EXISTS `expenses` (
   FOREIGN KEY (`category_id`) REFERENCES `category` (`id`)
 );
 
+ALTER TABLE `expenses` CHANGE `spendingtime` `time` date;

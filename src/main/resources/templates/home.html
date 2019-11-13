@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+    <title>Login page</title>
+    <link th:href="@{/style.css}" rel="stylesheet" type="text/css" media="all">
+</head>
+
+
+<body>
+<div class="welcomeStyle">Welcome:
+    <p th:text="${nameOfLogedUser}"></p>
+    <form method="POST" th:action="@{/logout}">
+        <input type="submit" value="Logout"/>
+    </form>
+</div>
+
+<div class="form-style-5">
+    <form th:action="@{/expenses/new}" method="post" th:object="${expenseForm}" >
+
+        <label>Date</label>
+        <input type="date" th:field="*{time}" th:required="true">
+        <span class="validationError" th:if="${#fields.hasErrors('time')}" th:errors="*{time}">
+                Error</span>
+        <label>Category</label>
+        <select th:field="*{category}">
+            <option th:each="categoryIterator : ${categories}" th:value="${categoryIterator.id}"
+                    th:text="${categoryIterator.name}">
+            </option>
+        </select>
+
+        <label>Currency</label>
+        <select th:field="*{money}">
+            <option th:each="currency : ${currencies}" th:value="${currency}" th:text="${currency}" >
+            </option>
+        </select>
+
+        <span class="validationError" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">
+                Error</span>
+        <input type="text" name="howmuch"  th:field="*{amount}" placeholder="Type quote">
+
+        <input type="submit" id="submitButton" value="Apply"  />
+
+
+    </form>
+</div>
+
+
+<table class="greenTable">
+    <thead>
+    <tr>
+        <th>Amount</th>
+        <th>Date of Spending</th>
+        <th>Category</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="expenseIterator : ${expenses}">
+        <td th:text="${expenseIterator.getAmount()}">1</td>
+        <td th:text=" ${expenseIterator.getTime()}">2</td>
+        <td th:text="${expenseIterator.getCategory().getName()}">3</td>
+    </tr>
+    </tbody>
+    <p>Your last expenses</p>
+</table>
+
+<table class="greenTable" id="tableId" >
+    <thead>
+    <tr>
+        <th>Current month's expenses</th>
+        <th>Remains according to month limit</th>
+    </tr>
+    </thead>
+    <tbody onload="alternateColor('tableId', 'row')">
+    <tr >
+        <td th:text="${monthExpenses}"></td>
+        <td th:text="${monthRemains}" id="row"></td>
+    </tr>
+    </tbody>
+    <thead>
+    <tr>
+        <th>Current year's expenses<</th>
+        <th>Remains according to year limit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${yearExpenses}"></td>
+        <td th:text="${yearRemains}"></td>
+    </tr>
+    </tbody>
+    <thead>
+    <tr>
+        <th>Today's expenses<</th>
+        <th>Average expenses of current month</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${dayExpenses}"></td>
+        <td th:text="${averageMonthExpenses}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<form th:action="@{/limits/set}" method="get">
+    <input type="submit" value="Set limit"/>
+</form>
+<form th:action="@{/stats/spendingByCategoryCurrMon}" method="get">
+    <input type="submit" value="See month stats"/>
+</form>
+
+</body>
+</html>

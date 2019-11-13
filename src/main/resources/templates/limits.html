@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html   xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
+    <title>Limits</title>
+    <link th:href="@{/style.css}" rel="stylesheet" type="text/css" media="all">
+</head>
+<body>
+
+<script>
+
+    function changeStateOfSelect() {
+        var checkbox = document.getElementById("check");
+        var mySelect = document.getElementById("select");
+        if(checkbox.checked) {
+            //if checked means gonna set to year limit, month should return 0
+            mySelect.disabled = true;
+
+        }
+        else {
+            mySelect.disabled = false;
+            mySelect.required = true;
+            mySelect.defaultValue=1
+        }
+    }
+</script>
+
+<div class="form-style-5" >
+    <form th:action="@{/limits/new}" method="post" th:object="${limitForm}" >
+
+        <input th:type="checkbox" id="check" th:field="*{isYear}" onclick="changeStateOfSelect()"> Year limit
+        <label>Month</label>
+        <select th:field="*{month}" id="select" onchange="changeStateOfSelect()" >
+            <option th:each="i : ${#numbers.sequence(1,12)}" th:value="${i}" th:text="${i}">
+            </option>
+        </select>
+        <label>Year</label>
+        <select th:field="*{year}">
+            <option th:each="i : ${#numbers.sequence(2019,3000)}" th:value="${i}" th:text="${i}">
+            </option>
+        </select>
+        <label>Currency</label>
+        <select th:field="*{money}">
+            <option th:each="currency : ${currencies}" th:value="${currency}" th:text="${currency}">
+            </option>
+        </select>
+        <span class="validationError"  th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">
+                Error</span>
+        <label>Limit</label>
+        <fieldset>
+            <input type="text" name="howmuch"  th:field="*{amount}" placeholder="Type quote"/>
+        </fieldset>
+        <input type="submit" id="submitButton" value="Apply"/>
+
+
+    </form>
+
+</div>
+
+<table class="greenTable">
+    <thead>
+    <tr>
+        <th>Your limit for current year</th>
+    </tr>
+    </thead>
+    <tr>
+        <td th:text="${yearLimit != 0} ? ${yearLimit} + ' PLN' : 'You didn\'t set year limit yet'"></td>
+    </tr>
+    <thead>
+    <tr>
+        <th>Your limit for current moth</th>
+    </tr>
+    </thead>
+    <tr>
+        <td th:text="${monthLimit != 0} ? ${monthLimit} +' PLN' : 'You didn\'t set month limit yet'"></td>
+    </tr>
+</table>
+
+<footer>
+    <form th:action="@{/home}">
+        <input type="submit" value="Home"/>
+    </form>
+</footer>
+
+
+</body>
+</html>

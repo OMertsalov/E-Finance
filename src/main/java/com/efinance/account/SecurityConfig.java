@@ -34,11 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/mainpage", "/limits/**")
+                .antMatchers("/home", "/limits/**")
                 .hasRole("USER")
                 .antMatchers("/", "/**").permitAll()
-                .and().formLogin().loginPage("/authorization/login")
-                .defaultSuccessUrl("/mainpage")
+                .and().formLogin().loginPage("/login")
+                .defaultSuccessUrl("/home")
                 .and().logout().logoutSuccessUrl("/");
     }
 }

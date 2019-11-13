@@ -18,6 +18,8 @@ import java.util.Collection;
 public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
+
+    @Getter
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
