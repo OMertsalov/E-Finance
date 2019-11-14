@@ -9,13 +9,10 @@
 </head>
 
 <body>
-<div th:if="${error}">
-    Unable to login. Check your username and password.
-</div>
 <div class="login-page">
     <div class="form">
         <form  th:action="@{/forgot}" method="post" >
-            <label th:if="${Tmessage}" th:text="${Tmessage}" th:class="messageInfo" >
+            <label th:text="${Tmessage}" th:class="messageInfo" >
             </label>
             <input type="text" name="email" id="email" placeholder="email"/>
             <input type="submit" value="send token to email" />

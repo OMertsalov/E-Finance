@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -51,7 +50,6 @@ public class ResetPassController {
                             + request.getServerPort() )
                     +"/reset?token="
                     +user.getResetToken();
-
             emailService.sentResetToken(user.getEmail(), appUrl);
             modelAndView.addObject("Tmessage", "A password reset link has been sent to " + email);
         }
@@ -64,7 +62,6 @@ public class ResetPassController {
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
     public String getResetPage(Model model, @RequestParam("token") String token){
 
-
         Optional<User> user = userRepo.findByResetToken(token);
         if (user.isPresent())  // Token found in DB
             model.addAttribute("token", user.get().getResetToken());
@@ -75,7 +72,7 @@ public class ResetPassController {
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.POST)
-    public String resetPassword(Model model, @RequestParam Map<String, String> requestParams, RedirectAttributes redir){
+    public String resetPassword(Model model, @RequestParam Map<String, String> requestParams){
         String token = requestParams.get("token");
         String password = requestParams.get("password");
         Optional<User> user = userRepo.findByResetToken(token);
