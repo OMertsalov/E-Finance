@@ -13,7 +13,7 @@
 <body>
 <div class="login-page">
     <div class="form">
-        <form th:action="@{/registration}" method="post" th:object="${regForm}" class="login-form" >
+        <form th:action="@{/registration}" method="post" th:object="${registrationForm}" class="login-form" >
 
             <span class="validationError" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
                 Error in firstname</span>

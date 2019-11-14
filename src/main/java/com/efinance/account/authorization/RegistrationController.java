@@ -33,9 +33,9 @@ public class RegistrationController {
 
 
     @GetMapping
-    public String registration(Model model,RegistrationForm registrationForm){
-        registrationForm = new RegistrationForm();
-        model.addAttribute("regForm",registrationForm);
+    public String registration(Model model){
+        RegistrationForm registrationForm = new RegistrationForm();
+        model.addAttribute("registrationForm",registrationForm);
         return "authorization/registration";
     }
 
