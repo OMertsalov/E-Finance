@@ -9,10 +9,10 @@
     <title></title>
     <link  th:href="@{/statStyle.css}" rel="stylesheet" type="text/css" media="all">
     <script type="text/javascript" th:inline="javascript">
-        /*<![CDATA[*/
-        window.onload = function()  {
-            var labls = 1;
-            var vals = 1;
+        window.onload = function() {
+
+            var labls = [[${expenseMap.keySet().toArray()}]];
+            var vals = [[${expenseMap.values().toArray()}]];
             var dataForChart = [];
             for (var j = 0; j < labls.length; j++) {
                 dataForChart.push({
@@ -20,7 +20,10 @@
                     y: vals[j]
                 })
             }
-            var chart = new CanvasJS.Chart ("chartContainer", {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                theme: "light2", // "light1", "light2", "dark1", "dark2"
+                exportEnabled: true,
+                animationEnabled: true,
                 title: {
                     text: "Monthly Expenses"
                 },
@@ -36,7 +39,6 @@
             });
             chart.render();
         }
-        /*]]>*/
     </script>
     <script>
         function changeStateOfSelect() {
@@ -77,11 +79,9 @@
     </form>
 </div>
 <div id="chartContainer" class="piestyle"></div>
-
-
-
-
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
 <!--<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>-->
 
 </body>
